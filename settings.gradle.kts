@@ -1,3 +1,3 @@
 rootProject.name = "kkp"
 
-include(":app", ":core")
+include(":app", ":core:service", "core:domain")
