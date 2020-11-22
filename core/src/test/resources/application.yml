@@ -1,0 +1,25 @@
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2_db
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: root
+    password:
+    driver-class-name: org.h2.Driver
+    platform: h2
+
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+    generate-ddl: true
+
+logging:
+  level:
+    com.zaxxer.hikari.HikariConfig: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+

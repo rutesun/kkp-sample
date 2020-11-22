@@ -49,9 +49,11 @@ subprojects {
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
         runtimeOnly("mysql:mysql-connector-java")
-
-//        testRuntimeOnly("com.h2database:h2")
         testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+        testImplementation("org.springframework.boot:spring-boot-starter-test")
+        testImplementation("org.jetbrains.kotlin:kotlin-test:1.4.10")
+        testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.4.10")
     }
 
 }
@@ -63,5 +65,7 @@ project(":app") {
 }
 
 project(":core") {
-
+    dependencies {
+        testRuntimeOnly("com.h2database:h2")
+    }
 }

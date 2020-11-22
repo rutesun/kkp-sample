@@ -27,7 +27,7 @@ class DistributionItem(distribution: MoneyDistribution, amount: Long) {
     @JoinColumn(name = "distribution_id")
     val distribution: MoneyDistribution = distribution
 
-    fun receive(receiver: User) {
+    internal fun receive(receiver: User) {
         this.used = true
         this.userId = receiver.id
     }
