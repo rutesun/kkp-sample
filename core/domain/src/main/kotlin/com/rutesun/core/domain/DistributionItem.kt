@@ -9,7 +9,7 @@ import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 
 @Entity
-class DistributionItem(distribution: MoneyDistribution, amount: Long) {
+class DistributionItem(distribution: MoneyDistribution, amount: Long) : WithUpdatedTime() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L

@@ -16,7 +16,7 @@ import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
 
 @Entity
-class MoneyDistribution private constructor(token: Token, creator: User, chatRoom: ChatRoom, totalAmount: Long) {
+class MoneyDistribution private constructor(token: Token, creator: User, chatRoom: ChatRoom, totalAmount: Long) : WithUpdatedTime() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L
@@ -42,7 +42,8 @@ class MoneyDistribution private constructor(token: Token, creator: User, chatRoo
     var status: DistributionResourceStatus = DistributionResourceStatus.AVAILABLE
         private set
 
-    private val expiredAt: LocalDateTime = LocalDateTime.now().plus(10, ChronoUnit.MINUTES)
+    // 분배 마감 시한
+    private val closedAt: LocalDateTime = LocalDateTime.now().plus(10, ChronoUnit.MINUTES)
 
     private fun List<DistributionItem>.findReceiveRecord(receiver: User): DistributionItem? = this.find { it.userId == receiver.id }
 
@@ -53,11 +54,15 @@ class MoneyDistribution private constructor(token: Token, creator: User, chatRoo
             return sum
         }
 
+    // 분배가 마감
     val isClosed: Boolean
-        get() = LocalDateTime.now().isAfter(expiredAt)
+        get() = LocalDateTime.now().isAfter(closedAt)
 
     val isEmpty: Boolean
         get() = status == DistributionResourceStatus.EXHAUSTED
+
+    val isExpired: Boolean
+        get() = createdAt.plusDays(7).isBefore(LocalDateTime.now())
 
     fun receiveAny(receiver: User): DistributionItem? {
         // 만료된 건은 받을 수 없다.
