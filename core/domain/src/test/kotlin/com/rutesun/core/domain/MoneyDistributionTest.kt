@@ -20,7 +20,6 @@ import kotlin.test.assertFailsWith
 @RunWith(SpringRunner::class)
 @DataJpaTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-//@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class MoneyDistributionTest {
 
     @PersistenceContext
@@ -35,24 +34,19 @@ class MoneyDistributionTest {
     @Before
     fun setup() {
         creator = User("test").also { em.persist(it) }
+        val users = (1..5).map { User("user$it").also { em.persist(it) } }
+        chatRoom = ChatRoom("test room", creator)
+        chatRoom.addUsers(users)
+        em.persist(chatRoom)
     }
 
     private val amount = 10_000L
     private val distributionCnt = 4
 
-    private fun makeTestUserAndChatRoom(userCnt: Int): ChatRoom {
-        val users = (1..userCnt).map { User("user$it").also { u -> em.persist(u) } }
-        chatRoom = ChatRoom("test room", listOf(creator, *users.toTypedArray()))
-            .also { em.persist(it) }
-        return chatRoom
-    }
-
     @Test
     @Order(1)
     fun `01-뿌리기 만들기`() {
-        val chatRoom = makeTestUserAndChatRoom(5)
-
-        val distribution = MoneyDistribution.make(creator, amount = amount, distributeCnt = distributionCnt, chatRoom = chatRoom)
+        val distribution = MoneyDistribution.make("token", creator, amount = amount, distributeCnt = distributionCnt, chatRoom = chatRoom)
         testEm.persistAndFlush(distribution)
         testEm.refresh(distribution)
 
@@ -66,13 +60,12 @@ class MoneyDistributionTest {
     @Test
     @Order(2)
     fun `02-뿌린 금액 계산`() {
-        val chatRoom = makeTestUserAndChatRoom(5)
-        val distribution = MoneyDistribution.make(creator, amount = amount, distributeCnt = distributionCnt, chatRoom = chatRoom)
+        val distribution = MoneyDistribution.make("token", creator, amount = amount, distributeCnt = distributionCnt, chatRoom = chatRoom)
             .also { testEm.persistAndFlush(it) }
 
         val items = distribution.items
-        distribution.receiveAny(chatRoom.users[0])
-        distribution.receiveAny(chatRoom.users[1])
+        distribution.receiveAny(chatRoom.users.toList()[0])
+        distribution.receiveAny(chatRoom.users.toList()[1])
 
         testEm.persistAndFlush(distribution)
         testEm.refresh(distribution)
@@ -83,8 +76,7 @@ class MoneyDistributionTest {
     @Test
     @Order(3)
     fun `03-받기 실패`() {
-        val chatRoom = makeTestUserAndChatRoom(5)
-        val distribution = MoneyDistribution.make(creator, amount = amount, distributeCnt = distributionCnt, chatRoom = chatRoom)
+        val distribution = MoneyDistribution.make("token", creator, amount = amount, distributeCnt = distributionCnt, chatRoom = chatRoom)
             .also { testEm.persistAndFlush(it) }
 
         assertFailsWith(NotJoinedUser::class) {
@@ -93,7 +85,7 @@ class MoneyDistributionTest {
         }
 
         assertFailsWith(AlreadyReceivedException::class) {
-            val user1 = chatRoom.users[0]
+            val user1 = chatRoom.users.toList()[0]
             distribution.receiveAny(user1)
             distribution.receiveAny(user1)
         }
@@ -101,7 +93,7 @@ class MoneyDistributionTest {
         assertFailsWith(ExpiredDistributionException::class) {
             ReflectionTestUtils.setField(distribution, "expiredAt", LocalDateTime.now().minusNanos(1L))
 
-            val user2 = chatRoom.users[1]
+            val user2 = chatRoom.users.toList()[1]
             distribution.receiveAny(user2)
         }
     }

@@ -4,6 +4,7 @@ import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 import javax.persistence.CascadeType
+import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -13,7 +14,7 @@ import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
 
 @Entity
-class MoneyDistribution private constructor(creator: User, chatRoom: ChatRoom, totalAmount: Long) {
+class MoneyDistribution private constructor(token: Token, creator: User, chatRoom: ChatRoom, totalAmount: Long) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L
@@ -32,12 +33,19 @@ class MoneyDistribution private constructor(creator: User, chatRoom: ChatRoom, t
 
     val totalAmount = totalAmount
 
+    @Column(unique = true)
+    val token: Token = token
+
     private val expiredAt: LocalDateTime = LocalDateTime.now().plus(10, ChronoUnit.MINUTES)
 
     private fun List<DistributionItem>.findReceiveRecord(receiver: User): DistributionItem? = this.find { it.userId == receiver.id }
 
     val completedAmount: Long
-        get() = items.filter { it.used }.sumOf(DistributionItem::amount)
+        get() {
+            var sum = 0L
+            items.filter { it.used }.forEach { sum += it.amount }
+            return sum
+        }
 
     val isClosed: Boolean
         get() = LocalDateTime.now().isAfter(expiredAt)
@@ -59,11 +67,11 @@ class MoneyDistribution private constructor(creator: User, chatRoom: ChatRoom, t
     companion object {
         private val log = LoggerFactory.getLogger(this.javaClass)
 
-        fun make(creator: User, amount: Long, distributeCnt: Int, chatRoom: ChatRoom): MoneyDistribution {
+        fun make(token: Token, creator: User, amount: Long, distributeCnt: Int, chatRoom: ChatRoom): MoneyDistribution {
             val perAmount = amount / distributeCnt
             val remain = amount % distributeCnt
 
-            return MoneyDistribution(creator, chatRoom, amount).apply {
+            return MoneyDistribution(token, creator, chatRoom, amount).apply {
                 val items = ArrayList<DistributionItem>(distributeCnt)
                 for (i in 1..distributeCnt) {
                     if (i == distributeCnt) {
