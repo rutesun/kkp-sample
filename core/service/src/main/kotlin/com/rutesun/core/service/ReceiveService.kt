@@ -1,4 +1,4 @@
-package com.ruetrunn.core.service
+package com.rutesun.core.service
 
 import com.rutesun.core.domain.DistributionItem
 import com.rutesun.core.domain.Token
@@ -10,14 +10,13 @@ interface ReceiveService {
 
 @Service
 class ReceiveServiceImpl(
-    private val distributionService: DistributionService,
     private val userRepository: UserRepository,
     private val distributionRepository: MoneyDistributionRepository
 ) : ReceiveService {
 
     override fun receive(receiverId: Long, token: Token): DistributionItem {
         val receiver = userRepository.findByIdOrThrow(receiverId)
-        val moneyDistribution = distributionService.get(token)
+        val moneyDistribution = distributionRepository.findByTokenOrThrow(token)
         if (moneyDistribution.isEmpty) throw MoneyExhaustedException(moneyDistribution)
 
         val item = moneyDistribution.receiveAny(receiver) ?: throw MoneyExhaustedException(moneyDistribution)

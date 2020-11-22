@@ -1,6 +1,7 @@
-package com.ruetrunn.core.service
+package com.rutesun.core.service
 
 import com.rutesun.core.domain.MoneyDistribution
+import com.rutesun.core.domain.NotOwnerException
 import com.rutesun.core.domain.Token
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
@@ -8,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional
 
 interface DistributionService {
     fun make(creatorId: Long, amount: Long, distributionCnt: Int): Token
-    fun get(token: Token): MoneyDistribution
+    fun get(userId: Long, token: Token): MoneyDistribution?
 }
 
 @Service
@@ -28,5 +29,10 @@ class DistributionServiceImpl(
         return token
     }
 
-    override fun get(token: Token): MoneyDistribution = distributionRepository.findByTokenOrThrow(token)
+    override fun get(userId: Long, token: Token): MoneyDistribution? {
+        val distribution = distributionRepository.findByTokenOrThrow(token)
+        if (distribution.creator.id != userId) throw NotOwnerException()
+        if (distribution.isExpired) return null
+        return distribution
+    }
 }

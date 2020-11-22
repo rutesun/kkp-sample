@@ -1,4 +1,4 @@
-package com.ruetrunn.core.service
+package com.rutesun.core.service
 
 import com.rutesun.core.domain.User
 import org.springframework.data.jpa.repository.JpaRepository
