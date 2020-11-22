@@ -6,6 +6,8 @@ import java.time.temporal.ChronoUnit
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
@@ -36,6 +38,10 @@ class MoneyDistribution private constructor(token: Token, creator: User, chatRoo
     @Column(unique = true)
     val token: Token = token
 
+    @Enumerated(EnumType.STRING)
+    var status: DistributionResourceStatus = DistributionResourceStatus.AVAILABLE
+        private set
+
     private val expiredAt: LocalDateTime = LocalDateTime.now().plus(10, ChronoUnit.MINUTES)
 
     private fun List<DistributionItem>.findReceiveRecord(receiver: User): DistributionItem? = this.find { it.userId == receiver.id }
@@ -50,6 +56,9 @@ class MoneyDistribution private constructor(token: Token, creator: User, chatRoo
     val isClosed: Boolean
         get() = LocalDateTime.now().isAfter(expiredAt)
 
+    val isEmpty: Boolean
+        get() = status == DistributionResourceStatus.EXHAUSTED
+
     fun receiveAny(receiver: User): DistributionItem? {
         // 만료된 건은 받을 수 없다.
         if (isClosed) throw ExpiredDistributionException(this)
@@ -59,9 +68,12 @@ class MoneyDistribution private constructor(token: Token, creator: User, chatRoo
         // 같은 채팅룸에 속한 사람만 받을 수 있다.
         if (!chatRoom.checkJoined(receiver)) throw NotJoinedUser(receiver)
 
-        return items.find { !it.used }
-            ?.apply { receive(receiver) }
-            ?.also { log.info("뿌리기 받ㅇ음") }
+        val item = items.find { !it.used }
+        if (item == null) {
+            status = DistributionResourceStatus.EXHAUSTED
+            return null
+        }
+        return item.apply { receive(receiver) }.also { log.info("receiver(id=${receiver.id}) 뿌리기 받음") }
     }
 
     companion object {
