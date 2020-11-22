@@ -1,0 +1,25 @@
+INSERT INTO kkp.user (id, name, chat_room_id, created_at, updated_at)
+VALUES (1, 'user1', 1, '2020-11-23 01:12:23', '2020-11-23 01:12:23');
+INSERT INTO kkp.user (id, name, chat_room_id, created_at, updated_at)
+VALUES (2, 'user2', 1, '2020-11-23 01:12:23', '2020-11-23 01:12:23');
+INSERT INTO kkp.user (id, name, chat_room_id, created_at, updated_at)
+VALUES (3, 'user3', 1, '2020-11-23 01:12:23', '2020-11-23 01:12:23');
+INSERT INTO kkp.user (id, name, chat_room_id, created_at, updated_at)
+VALUES (4, 'user4', 1, '2020-11-23 01:12:23', '2020-11-23 01:12:23');
+INSERT INTO kkp.user (id, name, chat_room_id, created_at, updated_at)
+VALUES (5, 'user5', 1, '2020-11-23 01:12:23', '2020-11-23 01:12:23');
+INSERT INTO kkp.user (id, name, chat_room_id, created_at, updated_at)
+VALUES (6, 'user6', 2, '2020-11-23 01:12:23', '2020-11-23 01:12:23');
+INSERT INTO kkp.user (id, name, chat_room_id, created_at, updated_at)
+VALUES (7, 'user7', 2, '2020-11-23 01:12:23', '2020-11-23 01:12:23');
+INSERT INTO kkp.user (id, name, chat_room_id, created_at, updated_at)
+VALUES (8, 'user8', 2, '2020-11-23 01:12:23', '2020-11-23 01:12:23');
+INSERT INTO kkp.user (id, name, chat_room_id, created_at, updated_at)
+VALUES (9, 'user9', 2, '2020-11-23 01:12:23', '2020-11-23 01:12:23');
+INSERT INTO kkp.user (id, name, chat_room_id, created_at, updated_at)
+VALUES (10, 'user10', 2, '2020-11-23 01:12:23', '2020-11-23 01:12:23');
+
+INSERT INTO kkp.chat_room (id, title, creator_id, created_at, updated_at)
+VALUES (1, 'test1', 1, '2020-11-23 01:14:03', '2020-11-23 01:14:03');
+INSERT INTO kkp.chat_room (id, title, creator_id, created_at, updated_at)
+VALUES (2, 'test6', 6, '2020-11-23 01:14:03', '2020-11-23 01:14:03');

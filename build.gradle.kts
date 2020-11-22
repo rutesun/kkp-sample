@@ -62,6 +62,7 @@ subprojects {
 project(":app") {
     dependencies {
         implementation(project(":core:service"))
+        implementation(project(":core:domain"))
         implementation("org.springframework.boot:spring-boot-starter-web")
         implementation("org.flywaydb:flyway-core")
     }

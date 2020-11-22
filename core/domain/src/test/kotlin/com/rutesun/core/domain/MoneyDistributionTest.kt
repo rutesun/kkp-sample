@@ -91,7 +91,7 @@ class MoneyDistributionTest {
         }
 
         assertFailsWith(ExpiredDistributionException::class) {
-            ReflectionTestUtils.setField(distribution, "expiredAt", LocalDateTime.now().minusNanos(1L))
+            ReflectionTestUtils.setField(distribution, "closedAt", LocalDateTime.now().minusNanos(1L))
 
             val user2 = chatRoom.users.toList()[1]
             distribution.receiveAny(user2)
