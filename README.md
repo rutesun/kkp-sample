@@ -27,7 +27,7 @@ Root project 'kkp'
 
 # Working List
 ## Entity 관계
-- chatRoom : user = 1 : N
+- chatRoom : user = N : N
 - moneyDistribution : distributionItem = 1 : N
 
 ## usecase 설명
@@ -48,6 +48,5 @@ Root project 'kkp'
 
 # TODO
 - web controller test
-- service mock test
 - jigsaw module
 
