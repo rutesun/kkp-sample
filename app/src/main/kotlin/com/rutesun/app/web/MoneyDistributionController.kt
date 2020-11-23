@@ -20,8 +20,8 @@ class MoneyDistributionController(
     private val receiveService: ReceiveService
 ) {
     @PostMapping
-    fun create(@RequestHeader(USER_KEY) creatorKey: Long, @RequestParam amount: Long, @RequestParam distributionCount: Int): ResponseEntity<Token> {
-        val token = distributionService.make(creatorKey, amount, distributionCount)
+    fun create(@RequestHeader(USER_KEY) creatorKey: Long, @RequestHeader(ROOM_KEY) chatRoomKey: String, @RequestParam amount: Long, @RequestParam distributionCount: Int): ResponseEntity<Token> {
+        val token = distributionService.make(creatorKey, chatRoomKey.toLong(), amount, distributionCount)
         return ResponseEntity.ok(token)
     }
 

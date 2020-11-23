@@ -3,7 +3,6 @@ package com.rutesun.core.domain
 import java.util.LinkedList
 import javax.persistence.CascadeType
 import javax.persistence.Entity
-import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
@@ -15,14 +14,14 @@ class ChatRoom(val title: String, creator: User) : WithUpdatedTime() {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L
 
-    @OneToMany(mappedBy = "chatRoom", fetch = FetchType.EAGER, cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH])
-    val users: List<User> = LinkedList<User>().apply { add(creator) }
+    @OneToMany(mappedBy = "chatRoom", cascade = [CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE])
+    val joinedUsers: List<UserChatRoom> = LinkedList<UserChatRoom>()
 
-    fun checkJoined(user: User): Boolean = users.find { it.id == user.id } != null
+    fun checkJoined(user: User): Boolean = joinedUsers.find { it.user.id == user.id } != null
 
     fun addUser(user: User) {
-        val users = this.users as LinkedList
-        users.add(user.join(this))
+        val joined = this.joinedUsers as LinkedList
+        joined.add(UserChatRoom(user, this))
     }
 
     fun addUsers(vararg users: User) {

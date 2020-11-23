@@ -1,11 +1,11 @@
 package com.rutesun.core.domain
 
+import java.util.LinkedList
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
+import javax.persistence.OneToMany
 
 @Entity
 class User(name: String) : WithUpdatedTime() {
@@ -15,9 +15,6 @@ class User(name: String) : WithUpdatedTime() {
 
     val name: String = name
 
-    @ManyToOne
-    @JoinColumn
-    var chatRoom: ChatRoom? = null
-
-    fun join(chatRoom: ChatRoom): User = this.apply { this.chatRoom = chatRoom }
+    @OneToMany(mappedBy = "user")
+    var joinedChatRooms: List<UserChatRoom>? = LinkedList()
 }

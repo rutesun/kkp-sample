@@ -16,7 +16,7 @@ class DistributionItem(distribution: MoneyDistribution, amount: Long) : WithUpda
 
     var used = false
         private set
-    var userId: Long? = null
+    var receiverId: Long? = null
         private set
     val amount: Long = amount
 
@@ -29,6 +29,6 @@ class DistributionItem(distribution: MoneyDistribution, amount: Long) : WithUpda
 
     internal fun receive(receiver: User) {
         this.used = true
-        this.userId = receiver.id
+        this.receiverId = receiver.id
     }
 }

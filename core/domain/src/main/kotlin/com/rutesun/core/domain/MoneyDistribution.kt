@@ -45,7 +45,7 @@ class MoneyDistribution private constructor(token: Token, creator: User, chatRoo
     // 분배 마감 시한
     private val closedAt: LocalDateTime = LocalDateTime.now().plus(10, ChronoUnit.MINUTES)
 
-    private fun List<DistributionItem>.findReceiveRecord(receiver: User): DistributionItem? = this.find { it.userId == receiver.id }
+    private fun List<DistributionItem>.findReceiveRecord(receiver: User): DistributionItem? = this.find { it.receiverId == receiver.id }
 
     val completedAmount: Long
         get() {

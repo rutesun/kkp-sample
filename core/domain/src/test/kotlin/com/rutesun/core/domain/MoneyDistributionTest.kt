@@ -64,8 +64,8 @@ class MoneyDistributionTest {
             .also { testEm.persistAndFlush(it) }
 
         val items = distribution.items
-        distribution.receiveAny(chatRoom.users.toList()[0])
-        distribution.receiveAny(chatRoom.users.toList()[1])
+        distribution.receiveAny(chatRoom.joinedUsers.toList()[0].user)
+        distribution.receiveAny(chatRoom.joinedUsers.toList()[1].user)
 
         testEm.persistAndFlush(distribution)
         testEm.refresh(distribution)
@@ -79,13 +79,8 @@ class MoneyDistributionTest {
         val distribution = MoneyDistribution.make("token", creator, amount = amount, distributeCnt = distributionCnt, chatRoom = chatRoom)
             .also { testEm.persistAndFlush(it) }
 
-        assertFailsWith(NotJoinedUser::class) {
-            val other = User("user1").also { em.persist(it) }
-            distribution.receiveAny(other)
-        }
-
         assertFailsWith(AlreadyReceivedException::class) {
-            val user1 = chatRoom.users.toList()[0]
+            val user1 = chatRoom.joinedUsers.toList()[0].user
             distribution.receiveAny(user1)
             distribution.receiveAny(user1)
         }
@@ -93,7 +88,7 @@ class MoneyDistributionTest {
         assertFailsWith(ExpiredDistributionException::class) {
             ReflectionTestUtils.setField(distribution, "closedAt", LocalDateTime.now().minusNanos(1L))
 
-            val user2 = chatRoom.users.toList()[1]
+            val user2 = chatRoom.joinedUsers.toList()[1].user
             distribution.receiveAny(user2)
         }
     }
