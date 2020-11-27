@@ -16,7 +16,7 @@ data class DistributionResultDto(
     companion object {
         fun of(distribution: MoneyDistribution): DistributionResultDto {
             val dto = DistributionResultDto(distribution.totalAmount, distribution.completedAmount, distribution.createdAt)
-            dto.items = distribution.items.filter { it.used }.map { Item(it.amount, it.userId!!) }
+            dto.items = distribution.items.filter { it.used }.map { Item(it.amount, it.receiverId!!) }
             return dto
         }
     }

@@ -29,7 +29,7 @@ class ExceptionAdvice {
     @ExceptionHandler(value = [AlreadyReceivedException::class])
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     fun handleAlreadyReceivedException(ex: AlreadyReceivedException): ResponseEntity<*> {
-        val message = "(유저: ${ex.item.userId}, 받은 시간: ${ex.item.updatedAt}), ${ex.message}"
+        val message = "(유저: ${ex.item.receiverId}, 받은 시간: ${ex.item.updatedAt}), ${ex.message}"
         log.error(message)
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message)
     }
