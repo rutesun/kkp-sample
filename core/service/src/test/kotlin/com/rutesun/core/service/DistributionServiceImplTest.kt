@@ -6,6 +6,11 @@ import com.rutesun.core.domain.NotJoinedUser
 import com.rutesun.core.domain.NotOwnerException
 import com.rutesun.core.domain.Token
 import com.rutesun.core.domain.User
+import com.rutesun.core.exception.NotFoundException
+import com.rutesun.core.exception.NotFoundUserException
+import com.rutesun.core.repository.MoneyDistributionRepository
+import com.rutesun.core.repository.UserRepository
+import com.rutesun.core.util.findByIdOrThrow
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
