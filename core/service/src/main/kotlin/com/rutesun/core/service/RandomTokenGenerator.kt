@@ -1,6 +1,7 @@
 package com.rutesun.core.service
 
 import com.rutesun.core.domain.Token
+import com.rutesun.core.repository.MoneyDistributionRepository
 import org.apache.commons.lang3.RandomStringUtils
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation

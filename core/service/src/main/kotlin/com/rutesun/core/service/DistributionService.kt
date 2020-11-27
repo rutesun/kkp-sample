@@ -4,6 +4,10 @@ import com.rutesun.core.domain.ChatRoomRepository
 import com.rutesun.core.domain.MoneyDistribution
 import com.rutesun.core.domain.NotOwnerException
 import com.rutesun.core.domain.Token
+import com.rutesun.core.repository.MoneyDistributionRepository
+import com.rutesun.core.repository.UserRepository
+import com.rutesun.core.util.findByIdOrThrow
+import com.rutesun.core.util.findByTokenOrThrow
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional

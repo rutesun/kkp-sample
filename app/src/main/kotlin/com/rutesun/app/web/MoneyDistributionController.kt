@@ -1,8 +1,8 @@
 package com.rutesun.app.web
 
 import com.rutesun.core.domain.Token
+import com.rutesun.core.exception.NotFoundException
 import com.rutesun.core.service.DistributionService
-import com.rutesun.core.service.NotFoundException
 import com.rutesun.core.service.ReceiveService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping

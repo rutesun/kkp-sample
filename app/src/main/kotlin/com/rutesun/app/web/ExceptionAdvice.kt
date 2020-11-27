@@ -4,9 +4,9 @@ import com.rutesun.core.domain.AlreadyReceivedException
 import com.rutesun.core.domain.ExpiredDistributionException
 import com.rutesun.core.domain.NotJoinedUser
 import com.rutesun.core.domain.NotOwnerException
-import com.rutesun.core.service.MoneyExhaustedException
-import com.rutesun.core.service.NotFoundException
-import com.rutesun.core.service.NotFoundUserException
+import com.rutesun.core.exception.MoneyExhaustedException
+import com.rutesun.core.exception.NotFoundException
+import com.rutesun.core.exception.NotFoundUserException
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

@@ -1,4 +1,4 @@
-package com.rutesun.core.service
+package com.rutesun.core.exception
 
 import com.rutesun.core.domain.MoneyDistribution
 

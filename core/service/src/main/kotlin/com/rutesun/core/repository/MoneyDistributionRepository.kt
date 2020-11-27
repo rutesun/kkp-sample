@@ -1,4 +1,4 @@
-package com.rutesun.core.service
+package com.rutesun.core.repository
 
 import com.rutesun.core.domain.MoneyDistribution
 import com.rutesun.core.domain.Token
