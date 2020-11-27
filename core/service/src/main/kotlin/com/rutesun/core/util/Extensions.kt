@@ -14,7 +14,7 @@ import org.springframework.data.repository.findByIdOrNull
 fun UserRepository.findByIdOrThrow(creatorId: Long): User = findByIdOrNull(creatorId) ?: throw NotFoundUserException(creatorId)
 
 fun MoneyDistributionRepository.findByTokenOrThrow(token: Token): MoneyDistribution = findByToken(token)
-    ?: throw NotFoundException("$token 에 해당하는 뿌리기 기록이 없습니다.")
+    ?: throw NotFoundException.ofToken(token)
 
 fun ChatRoomRepository.findByIdOrThrow(roomId: Long): ChatRoom = findByIdOrNull(roomId)
-    ?: throw NotFoundException("$roomId 에 해당하는 채팅방 기록이 없습니다.")
+    ?: throw NotFoundException.ofRoom(roomId)
