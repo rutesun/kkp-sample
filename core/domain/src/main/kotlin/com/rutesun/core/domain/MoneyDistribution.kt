@@ -11,8 +11,6 @@ import javax.persistence.Enumerated
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
 
 @Entity
@@ -21,17 +19,14 @@ class MoneyDistribution private constructor(token: Token, creator: User, chatRoo
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L
 
-    @ManyToOne
-    @JoinColumn(name = "chat_room_id")
-    val chatRoom: ChatRoom = chatRoom
+    @Column(name = "chat_room_id")
+    val chatRoomId: Long = chatRoom.id
+    @Column(name = "creator_id")
+    val creatorId: Long = creator.id
 
     @OneToMany(mappedBy = "distribution", cascade = [CascadeType.ALL])
     var items: List<DistributionItem> = emptyList()
         private set
-
-    @ManyToOne
-    @JoinColumn(name = "creator_id")
-    val creator: User = creator
 
     val totalAmount = totalAmount
 
@@ -67,11 +62,11 @@ class MoneyDistribution private constructor(token: Token, creator: User, chatRoo
     fun receiveAny(receiver: User): DistributionItem? {
         // 만료된 건은 받을 수 없다.
         if (isClosed) throw ExpiredDistributionException(this)
+
+        if (creatorId == receiver.id) throw MyDistributionException()
         // 이미 받은 적 있는 사람은 받을 수 없다.
         val receivedRecord = items.findReceiveRecord(receiver)
         if (receivedRecord != null) throw AlreadyReceivedException(receivedRecord)
-        // 같은 채팅룸에 속한 사람만 받을 수 있다.
-        if (!chatRoom.checkJoined(receiver)) throw NotJoinedUser(receiver)
 
         val item = items.find { !it.used }
         if (item == null) {

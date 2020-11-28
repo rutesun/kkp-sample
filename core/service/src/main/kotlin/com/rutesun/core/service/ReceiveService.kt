@@ -27,7 +27,7 @@ class ReceiveServiceImpl(
         val receiver = userRepository.findByIdOrThrow(receiverId)
         val moneyDistribution = distributionRepository.findByTokenOrThrow(token)
 
-        if (!chatRoomService.checkJoined(receiverId, moneyDistribution.chatRoom.id)) throw NotJoinedUser(receiver)
+        if (!chatRoomService.checkJoined(receiverId, moneyDistribution.chatRoomId)) throw NotJoinedUser(receiver)
 
         if (moneyDistribution.isEmpty) throw MoneyExhaustedException(moneyDistribution)
 

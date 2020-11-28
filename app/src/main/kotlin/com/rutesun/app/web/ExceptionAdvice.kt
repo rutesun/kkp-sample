@@ -18,6 +18,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 class ExceptionAdvice {
     private val log = LoggerFactory.getLogger(this.javaClass)
 
+    @ExceptionHandler(value = [RuntimeException::class])
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    fun handleDefault(ex: RuntimeException): ResponseEntity<*> {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.message)
+    }
+
     @ExceptionHandler(value = [ExpiredDistributionException::class])
     @ResponseStatus(HttpStatus.NOT_FOUND)
     fun handleExpiredDistributionException(ex: ExpiredDistributionException): ResponseEntity<*> {

@@ -9,6 +9,9 @@ interface MoneyDistributionRepository : JpaRepository<MoneyDistribution, Long> {
     fun existsByToken(token: Token): Boolean
     fun findByToken(token: Token): MoneyDistribution?
 
-    @Query("SELECT md FROM MoneyDistribution md INNER JOIN FETCH md.items WHERE md.token = ?1")
+    @Query("""
+        SELECT md FROM MoneyDistribution md 
+          INNER JOIN FETCH md.items
+        WHERE md.token = ?1""")
     fun findWithItemsByToken(token: Token): MoneyDistribution?
 }

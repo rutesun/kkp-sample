@@ -41,7 +41,7 @@ class MoneyDistributionServiceImpl(
 
     override fun get(userId: Long, token: Token): MoneyDistribution? {
         val distribution = distributionRepository.findWithItemsByToken(token) ?: throw NotFoundException.ofToken(token)
-        if (distribution.creator.id != userId) throw NotOwnerException()
+        if (distribution.creatorId != userId) throw NotOwnerException()
         if (distribution.isExpired) return null
         return distribution
     }
