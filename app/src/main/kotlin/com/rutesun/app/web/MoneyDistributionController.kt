@@ -2,7 +2,8 @@ package com.rutesun.app.web
 
 import com.rutesun.core.domain.Token
 import com.rutesun.core.exception.NotFoundException
-import com.rutesun.core.service.DistributionService
+import com.rutesun.core.service.MoneyDistributionCreateService
+import com.rutesun.core.service.MoneyDistributionQueryService
 import com.rutesun.core.service.ReceiveService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -16,18 +17,19 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/distribution")
 class MoneyDistributionController(
-    private val distributionService: DistributionService,
+    private val moneyDistributionQueryService: MoneyDistributionQueryService,
+    private val moneyDistributionCreateService: MoneyDistributionCreateService,
     private val receiveService: ReceiveService
 ) {
     @PostMapping
     fun create(@RequestHeader(USER_KEY) creatorKey: Long, @RequestHeader(ROOM_KEY) chatRoomKey: String, @RequestParam amount: Long, @RequestParam distributionCount: Int): ResponseEntity<Token> {
-        val token = distributionService.make(creatorKey, chatRoomKey.toLong(), amount, distributionCount)
+        val token = moneyDistributionCreateService.create(creatorKey, chatRoomKey.toLong(), amount, distributionCount)
         return ResponseEntity.ok(token)
     }
 
     @GetMapping("/{token}")
     fun getInfo(@RequestHeader(USER_KEY) userKey: Long, @PathVariable token: String): ResponseEntity<DistributionResultDto> {
-        val distribution = distributionService.get(userKey, token) ?: throw NotFoundException()
+        val distribution = moneyDistributionQueryService.get(userKey, token) ?: throw NotFoundException()
         return ResponseEntity.ok(DistributionResultDto.of(distribution))
     }
 
