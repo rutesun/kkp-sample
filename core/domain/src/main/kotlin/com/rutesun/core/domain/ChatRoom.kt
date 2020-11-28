@@ -15,7 +15,11 @@ class ChatRoom(val title: String, creator: User) : WithUpdatedTime() {
     val id: Long = 0L
 
     @OneToMany(mappedBy = "chatRoom", cascade = [CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE])
-    val joinedUsers: List<UserChatRoom> = LinkedList<UserChatRoom>()
+    val joinedUsers: List<UserChatRoom> = LinkedList()
+
+    init {
+        (joinedUsers as LinkedList).add(UserChatRoom(user = creator, chatRoom = this))
+    }
 
     fun checkJoined(user: User): Boolean = joinedUsers.find { it.user.id == user.id } != null
 

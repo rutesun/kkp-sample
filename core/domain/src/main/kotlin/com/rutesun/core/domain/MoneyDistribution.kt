@@ -82,7 +82,7 @@ class MoneyDistribution private constructor(token: Token, creator: User, chatRoo
     }
 
     companion object {
-        private val log = LoggerFactory.getLogger(this.javaClass)
+        private val log = LoggerFactory.getLogger(MoneyDistribution.javaClass)
 
         fun make(token: Token, creator: User, amount: Long, distributeCnt: Int, chatRoom: ChatRoom): MoneyDistribution {
             val perAmount = amount / distributeCnt
