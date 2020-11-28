@@ -9,6 +9,7 @@ import com.rutesun.core.repository.UserRepository
 import com.rutesun.core.util.findByIdOrThrow
 import com.rutesun.core.util.findByTokenOrThrow
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 interface ReceiveService {
     fun receive(receiverId: Long, token: Token): DistributionItem
@@ -21,6 +22,7 @@ class ReceiveServiceImpl(
     private val distributionRepository: MoneyDistributionRepository
 ) : ReceiveService {
 
+    @Transactional
     override fun receive(receiverId: Long, token: Token): DistributionItem {
         val receiver = userRepository.findByIdOrThrow(receiverId)
         val moneyDistribution = distributionRepository.findByTokenOrThrow(token)
