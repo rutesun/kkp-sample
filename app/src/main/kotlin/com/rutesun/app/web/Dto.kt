@@ -11,12 +11,12 @@ data class DistributionResultDto(
     var items: List<Item> = emptyList()
         private set
 
-    data class Item(val receiveAmount: Long, val receiverUserId: Long)
+    data class Item(val receiveAmount: Long, val receiverUserId: Long?)
 
     companion object {
         fun of(distribution: MoneyDistribution): DistributionResultDto {
             val dto = DistributionResultDto(distribution.totalAmount, distribution.completedAmount, distribution.createdAt)
-            dto.items = distribution.items.filter { it.used }.map { Item(it.amount, it.receiverId!!) }
+            dto.items = distribution.items.map { Item(it.amount, it.receiverId) }
             return dto
         }
     }
