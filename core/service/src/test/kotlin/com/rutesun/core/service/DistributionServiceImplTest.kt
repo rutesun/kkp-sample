@@ -28,7 +28,10 @@ import kotlin.test.assertTrue
 @Transactional
 class DistributionServiceImplTest {
     @Autowired
-    private lateinit var distributionService: DistributionService
+    private lateinit var distributionCreateService: MoneyDistributionCreateService
+
+    @Autowired
+    private lateinit var moneyDistributionQueryService: MoneyDistributionQueryService
 
     @Autowired
     private lateinit var receiveService: ReceiveService
@@ -61,7 +64,7 @@ class DistributionServiceImplTest {
 
     private fun testMake(): Token {
 
-        return distributionService.make(user.id, chatRoom.id, amount, distributionCnt)
+        return distributionCreateService.create(user.id, chatRoom.id, amount, distributionCnt)
     }
 
     @Test
@@ -73,14 +76,14 @@ class DistributionServiceImplTest {
     fun `생성 - 실패`() {
         val user = users.first()
         assertFailsWith(NotFoundException::class) {
-            distributionService.make(user.id, -999, amount, distributionCnt)
+            distributionCreateService.create(user.id, -999, amount, distributionCnt)
         }
     }
 
     @Test
     fun `조회`() {
         val token = testMake()
-        distributionService.get(userId = user.id, token = token)
+        moneyDistributionQueryService.get(userId = user.id, token = token)
     }
 
     @Test
@@ -89,7 +92,7 @@ class DistributionServiceImplTest {
         val distribution = distributionRepository.findByToken(token)!!
 
         assertFailsWith(NotOwnerException::class) {
-            distributionService.get(userId = -999, token = token)
+            moneyDistributionQueryService.get(userId = -999, token = token)
         }
     }
 
